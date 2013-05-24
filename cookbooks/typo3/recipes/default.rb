@@ -22,7 +22,7 @@ directory "/var/www/typo3" do
 end
 
 # Execute a block
-execute "wget get.typo3.org/current -O /var/www/typo3/latest.tgz" do
+execute "wget get.typo3.org/4.5 -O /var/www/typo3/latest.tgz" do
   not_if do
     File.exists?("/var/www/typo3/latest.tgz")
   end
@@ -34,7 +34,7 @@ execute "cd /var/www/typo3 && sudo tar xzf latest.tgz" do
   end
 end
  
-execute "wget http://prdownloads.sourceforge.net/typo3/introductionpackage-6.0.4.tar.gz -O /var/www/html/intro.tgz" do
+execute "wget http://prdownloads.sourceforge.net/typo3/introductionpackage-4.5.26.tar.gz -O /var/www/html/intro.tgz" do
   not_if do
     File.exists?("/var/www/html/intro.tgz")
   end

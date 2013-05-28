@@ -1,18 +1,25 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-Vagrant::Config.run do |config|
+Vagrant.configure("2") do |config|
   # All Vagrant configuration is done here. The most common configuration
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "ipf-precise"
-  config.vm.customize ["modifyvm", :id, "--memory", "768"]
-
+  config.vm.box = "precise64"
+  #config.vm.customize ["modifyvm", :id, "--memory", "768"]
+  config.vm.provider :lxc do |lxc|
+    lxc.customize 'cgroup.memory.limit_in_bytes', '1024M'
+  end
+  config.vm.define :lxc do |lxc_config|
+    lxc_config.vm.network :forwarded_port, guest: 80, host: 3000
+    lxc_config.vm.provision :shell, inline:
+    'echo "Replace this with your puppet manifests"'
+  end
   # The url from where the 'config.vm.box' box will be fetched if it
   # doesn't already exist on the user's system.
-  config.vm.box_url = "http://files.vagrantup.com/precise32.box"
+  config.vm.box_url = "http://dl.dropbox.com/u/13510779/lxc-precise-amd64-2013-05-08.box"
 
   # Boot with a GUI so you can see the screen. (Default is headless)
   # config.vm.boot_mode = :gui
@@ -30,12 +37,12 @@ Vagrant::Config.run do |config|
 
   # Forward a port from the guest to the host, which allows for outside
   # computers to access the VM, whereas host only networking does not.
-  config.vm.forward_port 80, 8333
+  # config.vm.forward_port "web", 80, 8333
 
   # Share an additional folder to the guest VM. The first argument is
   # an identifier, the second is the path on the guest to mount the
   # folder, and the third is the path on the host to the actual folder.
-  # config.vm.share_folder "v-data", "/vagrant_data", "../data"
+  #  config.vm.share_folder "v-data", "/vagrant_data", "../data"
 
    config.vm.provision :chef_solo do |chef|
     chef.cookbooks_path = "./cookbooks"
